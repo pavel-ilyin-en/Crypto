@@ -1,14 +1,24 @@
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 
 public class Encrypt {
 
     public static final String KEY = "абвгдеёжзийклмнопрстуфхцчшщъыьэюя.,\":-!? ";
 
-    public static Path encryptFile (String key, Path source, int shift) throws IOException {
+    public static Path encryptFile (String key, Path source, int shift) throws IOException{
 
-        String sourceString = Files.readString(source);
+        String sourceString = null;
+        try {
+            sourceString = Files.readString(source);
+        } catch (IOException e) {
+            System.out.println("Файл с таким именем по указанному пути не существует или запрещён к чтению");
+            e.printStackTrace();
+        } catch (OutOfMemoryError e){
+            System.out.println("Файл слишком велик для чтения в память");
+        }
+
         String dest = Encrypt.encryptString(sourceString, Encrypt.KEY, shift);
 
         Path destFile = Path.of("encrypted_" + source.getFileName());

@@ -19,7 +19,15 @@ public class Decrypt {
         "! "
          */
 
-        String sourceString = Files.readString(source);
+        String sourceString = null;
+        try {
+            sourceString = Files.readString(source);
+        } catch (IOException e) {
+            System.out.println("Файл с таким именем по указанному пути не существует или запрещён к чтению");
+            e.printStackTrace();
+        } catch (OutOfMemoryError e){
+            System.out.println("Файл слишком велик для чтения в память");
+        }
 
         Path destFile = Path.of("decrypted_" + source.getFileName());
         Files.createFile(destFile);
@@ -56,7 +64,16 @@ public class Decrypt {
         Map<Character, Float> encryptedFileStat = getStat(encryptedFile, key);
         Map<Character, Character> keyMap = findMatches(encryptedFileStat, auxFileStat);
 
-        String string = Files.readString(encryptedFile).toLowerCase();
+        String string = null;
+        try {
+            string = Files.readString(encryptedFile).toLowerCase();
+        } catch (IOException e) {
+            System.out.println("Файл с таким именем по указанному пути не существует или запрещён к чтению");
+            e.printStackTrace();
+        } catch (OutOfMemoryError e){
+            System.out.println("Файл слишком велик для чтения в память");
+        }
+
         StringBuilder sb = new StringBuilder(string);
 
         for (int i = 0; i < sb.length();i++){
@@ -70,7 +87,7 @@ public class Decrypt {
         return decryptedFile;
     }
 
-    public static Map<Character, Character> findMatches(Map<Character, Float> encryptedMap, Map<Character, Float> auxMap) throws IOException {
+    public static Map<Character, Character> findMatches(Map<Character, Float> encryptedMap, Map<Character, Float> auxMap) {
 
         Map<Character, Character> keyMap = new HashMap<>();
         float diff = Float.MAX_VALUE;
@@ -87,9 +104,18 @@ public class Decrypt {
         return keyMap;
     }
 
-    public static Map<Character, Float> getStat(Path path, String key) throws IOException {
+    public static Map<Character, Float> getStat(Path path, String key) {
 
-        String string = Files.readString(path).toLowerCase();
+        String string = null;
+        try {
+            string = Files.readString(path).toLowerCase();
+        } catch (IOException e) {
+            System.out.println("Файл с таким именем по указанному пути не существует или запрещён к чтению");
+            e.printStackTrace();
+        } catch (OutOfMemoryError e){
+            System.out.println("Файл слишком велик для чтения в память");
+        }
+
         Map<Character, Float> statMap = new HashMap<>();
 
         for (char c : key.toCharArray()) {

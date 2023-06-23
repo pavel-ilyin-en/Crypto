@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Menu {
 
-    public static void callMenu () throws IOException {
+    public static void callMenu () {
         String initialMessage = """
                 Выберите режим работы программы:\s
                 1 - Шифрование
@@ -24,10 +24,20 @@ public class Menu {
 
             System.out.println("Введите путь к файлу:\n");
             Path source = Path.of(scanner.nextLine());
-            Path dest = Encrypt.encryptFile(Encrypt.KEY, source, shift);
+            try {
+                Path dest = Encrypt.encryptFile(Encrypt.KEY, source, shift);
+            } catch (IOException e) {
+                System.out.println("Возможно файл с таким имененм уже существует, проверьте путь.\nИли запись в файл невозможна по другой причине.");
+                e.printStackTrace();
+            }
 
         } else if (mode.equals("2")) {
-            callSubMenu();
+            try {
+                callSubMenu();
+            } catch (IOException e) {
+                System.out.println("Возможно файл с таким имененм уже существует, проверьте путь.\nИли запись в файл невозможна по другой причине.");
+                e.printStackTrace();
+            }
         } else {
             System.exit(0);
         }
